@@ -32,6 +32,8 @@ button{cursor:pointer}
   background:radial-gradient(circle at 30% 30%,#fff7e0,var(--gold) 70%);box-shadow:0 0 0 3px rgba(255,255,255,.15),0 6px 18px rgba(0,0,0,.25)}
 .emblem svg{width:36px;height:36px}
 .emblem img{width:62px;height:62px;object-fit:contain;border-radius:50%;background:#fff}
+.emblem.logo{width:auto;height:auto;border-radius:10px;background:none;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.emblem.logo img{width:58px;height:auto;border-radius:9px;background:none;display:block}
 .kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-2);font-weight:700}
 .hero h1{margin:4px 0 2px;font:700 clamp(19px,4.6vw,27px)/1.25 "Libre Baskerville",Georgia,serif;letter-spacing:.2px}
 .hero p{margin:0;color:#c9d5ea;font-size:13.5px}
@@ -108,32 +110,6 @@ select.in{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .sep{height:1px;background:var(--line-2);margin:20px 0}
 
 
-/* Signature */
-.sig-box{border:2px dashed var(--line);border-radius:14px;min-height:170px;display:grid;place-items:center;text-align:center;padding:16px;background:
-  repeating-linear-gradient(0deg,transparent 0 31px,#f1f4f9 31px 32px),#fff}
-.sig-box.has{border-style:solid;border-color:var(--ok)}
-.sig-box.err{border-color:var(--no);background:var(--no-soft)}
-.sig-box img{max-width:100%;max-height:150px}
-.sig-meta{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-.sig-ok{color:var(--ok);font-weight:700;font-size:13.5px}
-.sig-pad{position:fixed;inset:0;z-index:50;background:#0b1830;display:none;flex-direction:column;
-  padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));touch-action:none;overscroll-behavior:contain}
-.sig-pad.open{display:flex}
-.sig-top{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#fff;margin-bottom:10px}
-.sig-top h3{margin:0;font-size:16px}
-.sig-top p{margin:2px 0 0;color:#a9b8d3;font-size:12.5px}
-.sig-stage{flex:1;display:grid;place-items:center;min-height:0}
-.sig-paper{position:relative;background:#fff;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.4);overflow:hidden}
-.sig-paper canvas{display:block;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:crosshair}
-.sig-line{position:absolute;left:8%;right:8%;bottom:24%;border-bottom:2px solid #c9d3e3;pointer-events:none}
-.sig-x{position:absolute;left:5%;bottom:calc(24% + 4px);color:#9fb0c9;font-weight:800;font-size:20px;pointer-events:none}
-.sig-hint{position:absolute;inset:0;display:grid;place-items:center;color:#b2bfd3;font-weight:700;font-size:15px;pointer-events:none;text-align:center;padding:0 20px}
-.sig-name{position:absolute;left:0;right:0;bottom:9%;text-align:center;color:#6b7a92;font-size:13px;font-weight:600;pointer-events:none}
-.sig-actions{display:flex;gap:10px;margin-top:12px;justify-content:center;flex-wrap:wrap}
-.rotate-tip{color:var(--gold-2);font-size:12.5px;text-align:center;margin-top:8px}
-@media (orientation:landscape){.rotate-tip{display:none}}
-body.lock{overflow:hidden;touch-action:none}
-
 /* Photos */
 .drop{border:2px dashed var(--line);border-radius:14px;padding:22px;text-align:center;background:#fafbfd;cursor:pointer;display:block}
 .drop b{color:var(--navy)}
@@ -186,12 +162,7 @@ body.lock{overflow:hidden;touch-action:none}
 <header class="hero">
   <div class="pattern"></div>
   <div class="hero-in">
-    <div class="emblem" id="emblem" aria-hidden="true">
-      <svg viewBox="0 0 48 48" fill="none" stroke="#0b2447" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M24 7v32M15 41h18M10 14h28M24 10l0 0"/><circle cx="24" cy="9" r="2.2" fill="#0b2447"/>
-        <path d="M13 14l-6 12a6 6 0 0 0 12 0zM35 14l-6 12a6 6 0 0 0 12 0z"/>
-      </svg>
-    </div>
+    <div class="emblem logo" id="emblem"><img src="data:image/png;base64,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" alt="Logo Kementerian Hukum (Pengayoman)"></div>
     <div>
       <div class="kicker" id="kicker"></div>
       <h1>Monitoring &amp; Evaluasi Pos Bantuan Hukum</h1>
@@ -219,22 +190,19 @@ body.lock{overflow:hidden;touch-action:none}
           <input class="in" id="desa" name="desa" placeholder="Nama desa/kelurahan" required></div></div>
         <div class="f" data-f="kepalaDesa"><label for="kepalaDesa">Kepala Desa/Lurah <i>*</i></label>
           <input class="in" id="kepalaDesa" name="kepalaDesa" placeholder="Nama lengkap" required></div>
-        <div class="f" data-f="tanggal"><label for="tanggal">Tanggal Monev <i>*</i></label>
+        <div class="f" data-f="tanggal"><label for="tanggal">Tanggal Pengisian <i>*</i></label>
           <input class="in" type="date" id="tanggal" name="tanggal" required></div>
       </div>
       <div class="sep"></div>
       <div class="sub-h">Pengisi Form</div>
-      <p style="margin:-6px 0 14px;color:var(--muted);font-size:13px">Nama dan jabatan tercetak di bawah tanda tangan pada dokumen.</p>
+      <p style="margin:-6px 0 14px;color:var(--muted);font-size:13px">Untuk keperluan rekap dan konfirmasi. Tidak tercetak di dokumen.</p>
       <div class="grid">
         <div class="f" data-f="namaPengisi"><label for="namaPengisi">Nama Pengisi <i>*</i></label>
           <input class="in" id="namaPengisi" name="namaPengisi" autocomplete="name" placeholder="Nama lengkap" required></div>
         <div class="f"><label for="jabatanPengisi">Jabatan</label>
           <input class="in" id="jabatanPengisi" name="jabatanPengisi" placeholder="mis. Paralegal / Sekretaris Desa"></div>
         <div class="f"><label for="kontak">No. HP/WhatsApp</label>
-          <input class="in" id="kontak" name="kontak" type="tel" inputmode="tel" autocomplete="tel" placeholder="Opsional (hanya untuk rekap)"></div>
-        <div class="f"><label for="tempatTtd">Tempat penandatanganan</label>
-          <input class="in" id="tempatTtd" name="tempatTtd" placeholder="Terisi otomatis dari nama desa/kelurahan">
-          <small>Tercetak di atas tanda tangan, mis. “Bandar Klippa, 16 November 2026”.</small></div>
+          <input class="in" id="kontak" name="kontak" type="tel" inputmode="tel" autocomplete="tel" placeholder="Opsional"></div>
       </div>
     </div>
   </section>
@@ -265,22 +233,9 @@ body.lock{overflow:hidden;touch-action:none}
 
   <!-- 5 DOKUMENTASI & TTD -->
   <section class="card step" data-step="5" hidden>
-    <div class="card-h"><div><h2>Tanda Tangan &amp; Dokumentasi</h2><p>Tanda tangani langsung di layar HP dengan jari. Posisinya otomatis dirapikan di dokumen.</p></div></div>
+    <div class="card-h"><div><h2>Foto Dokumentasi</h2><p>Opsional. Foto disimpan di folder Google Drive desa/kelurahan ini, tidak masuk ke dokumen.</p></div></div>
     <div class="card-b">
-      <div class="sub-h">Tanda Tangan <span id="ttdReq" style="color:var(--no)">*</span></div>
-      <div class="sig-box" id="sigBox">
-        <div id="sigEmpty">
-          <p style="margin:0 0 12px;color:var(--muted)">Belum ada tanda tangan</p>
-          <button type="button" class="btn btn-p" data-sign><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17c3-3 4-9 7-9 2 0-1 9 2 9 2 0 2-3 4-3s1 3 3 3"/><path d="M3 21h18"/></svg>Tanda Tangani Sekarang</button>
-        </div>
-        <img id="sigImg" alt="Tanda tangan" hidden>
-      </div>
-      <div class="sig-meta" id="sigMeta" hidden>
-        <span class="sig-ok">✓ Tanda tangan tersimpan</span>
-        <button type="button" class="btn btn-o" data-sign>Ulangi tanda tangan</button>
-      </div>
-      <div class="sep"></div>
-      <div class="sub-h">Foto dokumentasi <span style="font:500 13px 'Plus Jakarta Sans';color:var(--muted)">(opsional, maks. <span id="maxFoto"></span> foto)</span></div>
+      <div class="sub-h">Lampirkan foto <span style="font:500 13px 'Plus Jakarta Sans';color:var(--muted)">(opsional, maks. <span id="maxFoto"></span> foto)</span></div>
       <label class="drop" for="foto">
         <b>Ambil foto atau pilih dari galeri</b><br><span style="color:var(--muted);font-size:13px">Foto otomatis diperkecil agar cepat terkirim</span>
       </label>
@@ -330,28 +285,6 @@ body.lock{overflow:hidden;touch-action:none}
   </div>
 </div>
 
-<!-- Bantalan tanda tangan layar penuh -->
-<div class="sig-pad" id="sigPad" role="dialog" aria-modal="true" aria-label="Bantalan tanda tangan">
-  <div class="sig-top">
-    <div><h3>Tanda Tangan</h3><p>Gunakan jari di dalam kotak putih</p></div>
-    <button type="button" class="btn btn-w" id="sigCancel" style="min-height:40px;padding:8px 14px">Batal</button>
-  </div>
-  <div class="sig-stage" id="sigStage">
-    <div class="sig-paper" id="sigPaper">
-      <canvas id="sigCanvas"></canvas>
-      <div class="sig-line"></div><div class="sig-x">×</div>
-      <div class="sig-hint" id="sigHint">Tanda tangan di sini</div>
-      <div class="sig-name" id="sigName"></div>
-    </div>
-  </div>
-  <div class="rotate-tip">Tip: putar HP ke posisi mendatar agar area tanda tangan lebih lebar.</div>
-  <div class="sig-actions">
-    <button type="button" class="btn btn-w" id="sigUndo">↶ Urungkan</button>
-    <button type="button" class="btn btn-w" id="sigClear">Hapus</button>
-    <button type="button" class="btn btn-g" id="sigSave">Simpan Tanda Tangan</button>
-  </div>
-</div>
-
 <div class="busy" id="busy"><div><div class="spin"></div><b id="busyMsg">Menyimpan ke Google Drive…</b><p style="color:#c9d5ea;margin:6px 0 0;font-size:13px">Mohon tidak menutup halaman ini.</p></div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -364,10 +297,10 @@ var CFG = <?!= JSON.stringify(clientConfig()) ?>;
   'use strict';
   var S = FORM_SCHEMA, $ = function (s, r) { return (r || document).querySelector(s); },
     $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  var DRAFT_KEY = 'monev-posbankum-draft-v2';
-  var STEPS = ['Identitas', 'Sarana & Prasarana', 'Pelaporan', 'Kendala', 'Tanda Tangan', 'Tinjau & Kirim'];
-  var step = 1, ttd = '', fotos = [], lastResult = null;
-  var ID_FIELDS = ['kabupaten', 'kecamatan', 'jenisWilayah', 'desa', 'kepalaDesa', 'tanggal', 'namaPengisi', 'jabatanPengisi', 'kontak', 'tempatTtd'];
+  var DRAFT_KEY = 'monev-posbankum-draft-v3';
+  var STEPS = ['Identitas', 'Sarana & Prasarana', 'Pelaporan', 'Kendala', 'Dokumentasi', 'Tinjau & Kirim'];
+  var step = 1, fotos = [], lastResult = null;
+  var ID_FIELDS = ['kabupaten', 'kecamatan', 'jenisWilayah', 'desa', 'kepalaDesa', 'tanggal', 'namaPengisi', 'jabatanPengisi', 'kontak'];
   var saranaIds = [], pelaporanIds = S.pelaporan.map(function (i) { return i.id; });
   S.sarana.forEach(function (g) { g.items.forEach(function (i) { saranaIds.push(i.id); }); });
 
@@ -375,9 +308,7 @@ var CFG = <?!= JSON.stringify(clientConfig()) ?>;
   $('#kicker').textContent = CFG.instansi || '';
   $('#provHero').textContent = CFG.provinsi; $('#provFixed').textContent = CFG.provinsi;
   $('#maxFoto').textContent = CFG.maxPhotos;
-  $('#ttdReq').hidden = !CFG.requireTtd;
   $('#foot').textContent = (CFG.instansi || '') + (CFG.unit ? ' · ' + CFG.unit : '');
-  if (CFG.logo) $('#emblem').innerHTML = '<img src="' + esc_(CFG.logo) + '" alt="">';
   S.kabupatenKota.forEach(function (k) { var o = document.createElement('option'); o.textContent = k; $('#kabupaten').appendChild(o); });
 
   $('#stepper').innerHTML = STEPS.map(function (t, i) {
@@ -453,17 +384,8 @@ var CFG = <?!= JSON.stringify(clientConfig()) ?>;
       renumber(kind); saveDraft();
     } else if (t.dataset.go) {
       go(Number(t.dataset.go));
-    } else if (t.hasAttribute('data-sign')) {
-      Sig.open();
     }
   });
-  // Tempat tanda tangan terisi otomatis dari nama desa/kelurahan (selama belum diubah manual)
-  var tempatAuto = '';
-  $('#desa').addEventListener('input', function () {
-    var tp = $('#tempatTtd');
-    if (!tp.value || tp.value === tempatAuto) { tempatAuto = this.value.trim(); tp.value = tempatAuto; }
-  });
-
   function counts() {
     var c = function (ids, el) {
       var n = ids.filter(function (id) { return $('input[name="' + id + '"]:checked'); }).length;
@@ -487,7 +409,7 @@ var CFG = <?!= JSON.stringify(clientConfig()) ?>;
     ID_FIELDS.forEach(function (k) { idn[k] = $('#' + k).value.trim(); });
     return {
       identitas: idn, sarana: marks(saranaIds), pelaporan: marks(pelaporanIds),
-      kendala: lines('kendala'), permasalahan: lines('permasalahan'), ttd: ttd,
+      kendala: lines('kendala'), permasalahan: lines('permasalahan'),
       foto: withPhotos === false ? [] : fotos.map(function (p) { return { dataUrl: p.dataUrl, caption: p.caption }; })
     };
   }
@@ -505,7 +427,6 @@ var CFG = <?!= JSON.stringify(clientConfig()) ?>;
       var arr = d[k] || [];
       for (var i = 0; i < Math.max(S.minRows, arr.length); i++) listRow(k, arr[i]);
     });
-    setTtd(d.ttd || '');
   }
 
   var saveTimer;
@@ -519,7 +440,7 @@ var CFG = <?!= JSON.stringify(clientConfig()) ?>;
   function clearDraft() { try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* abaikan */ } }
 
   // ---------- Validation ----------
-  var REQ = [['kabupaten', 'Kabupaten/Kota'], ['kecamatan', 'Kecamatan'], ['desa', 'Nama desa/kelurahan'], ['kepalaDesa', 'Kepala Desa/Lurah'], ['tanggal', 'Tanggal monev'], ['namaPengisi', 'Nama pengisi form']];
+  var REQ = [['kabupaten', 'Kabupaten/Kota'], ['kecamatan', 'Kecamatan'], ['desa', 'Nama desa/kelurahan'], ['kepalaDesa', 'Kepala Desa/Lurah'], ['tanggal', 'Tanggal pengisian'], ['namaPengisi', 'Nama pengisi form']];
   function validate(n) {
     var bad = [];
     if (n === 1) REQ.forEach(function (r) {
@@ -528,9 +449,8 @@ var CFG = <?!= JSON.stringify(clientConfig()) ?>;
     if (n === 2 || n === 3) (n === 2 ? saranaIds : pelaporanIds).forEach(function (id) {
       if (!$('input[name="' + id + '"]:checked')) { var row = $('.item[data-id="' + id + '"]'); row.classList.add('err'); bad.push(row); }
     });
-    if (n === 5 && CFG.requireTtd && !ttd) { $('#sigBox').classList.add('err'); bad.push($('#sigBox')); }
     if (bad.length) {
-      var msg = n === 1 ? 'Lengkapi isian bertanda *.' : n === 5 ? 'Tanda tangan belum dibubuhkan.' : bad.length + ' isian belum dipilih Ada/Tidak Ada.';
+      var msg = n === 1 ? 'Lengkapi isian bertanda *.' : bad.length + ' isian belum dipilih Ada/Tidak Ada.';
       toast(msg, true);
       bad[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
       if (bad[0].focus && n === 1) setTimeout(function () { bad[0].focus({ preventScroll: true }); }, 350);
@@ -669,119 +589,6 @@ var CFG = <?!= JSON.stringify(clientConfig()) ?>;
     });
     $('.drop').style.display = fotos.length >= CFG.maxPhotos ? 'none' : '';
   }
-
-  // ---------- Tanda tangan (jari / stylus / mouse) ----------
-  function setTtd(url) {
-    ttd = url || '';
-    $('#sigImg').hidden = !ttd; $('#sigEmpty').hidden = !!ttd; $('#sigMeta').hidden = !ttd;
-    $('#sigBox').classList.toggle('has', !!ttd); if (ttd) { $('#sigBox').classList.remove('err'); $('#sigImg').src = ttd; }
-  }
-  var Sig = (function () {
-    var W = 960, H = 600, LW = 5.2;               // ruang gambar logis (rasio 1,6 : 1)
-    var pad = $('#sigPad'), cv = $('#sigCanvas'), ctx = cv.getContext('2d'), paper = $('#sigPaper');
-    var strokes = [], cur = null, activeId = null, scale = 1;
-
-    function layout() {
-      var st = $('#sigStage'), aw = st.clientWidth, ah = st.clientHeight;
-      var w = Math.min(aw, ah * W / H), h = w * H / W;
-      scale = w / W;
-      var dpr = Math.min(window.devicePixelRatio || 1, 3);
-      paper.style.width = w + 'px'; paper.style.height = h + 'px';
-      cv.style.width = w + 'px'; cv.style.height = h + 'px';
-      cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
-      ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
-      redraw();
-    }
-    function drawStroke(c, s) {
-      c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = '#0a1a3a'; c.fillStyle = '#0a1a3a'; c.lineWidth = LW;
-      if (s.length === 1) { c.beginPath(); c.arc(s[0].x, s[0].y, LW / 2, 0, Math.PI * 2); c.fill(); return; }
-      c.beginPath(); c.moveTo(s[0].x, s[0].y);
-      for (var i = 1; i < s.length - 1; i++) {
-        var mx = (s[i].x + s[i + 1].x) / 2, my = (s[i].y + s[i + 1].y) / 2;
-        c.quadraticCurveTo(s[i].x, s[i].y, mx, my);
-      }
-      c.lineTo(s[s.length - 1].x, s[s.length - 1].y); c.stroke();
-    }
-    function redraw() {
-      ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); ctx.restore();
-      strokes.forEach(function (s) { drawStroke(ctx, s); });
-      $('#sigHint').style.display = strokes.length ? 'none' : '';
-    }
-    function pt(e) {
-      var r = cv.getBoundingClientRect();
-      return { x: Math.max(0, Math.min(W, (e.clientX - r.left) / scale)), y: Math.max(0, Math.min(H, (e.clientY - r.top) / scale)) };
-    }
-    function start(e) {
-      if (activeId !== null) return;           // abaikan jari kedua / telapak tangan
-      activeId = e.pointerId != null ? e.pointerId : 'touch';
-      cur = [pt(e)]; strokes.push(cur); redraw();
-    }
-    function move(e) {
-      if (!cur) return;
-      var p = pt(e), l = cur[cur.length - 1];
-      if (Math.abs(p.x - l.x) + Math.abs(p.y - l.y) < 1.2) return;
-      cur.push(p); redraw();
-    }
-    function end() { cur = null; activeId = null; }
-
-    if (window.PointerEvent) {
-      cv.addEventListener('pointerdown', function (e) {
-        e.preventDefault(); if (activeId !== null) return;
-        try { cv.setPointerCapture(e.pointerId); } catch (x) { /* abaikan */ }
-        start(e);
-      });
-      cv.addEventListener('pointermove', function (e) {
-        if (e.pointerId !== activeId) return; e.preventDefault();
-        var evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
-        (evs.length ? evs : [e]).forEach(move);
-      });
-      ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function (t) {
-        cv.addEventListener(t, function (e) { if (e.pointerId === activeId) end(); });
-      });
-    } else {
-      cv.addEventListener('touchstart', function (e) { e.preventDefault(); start(e.changedTouches[0]); }, { passive: false });
-      cv.addEventListener('touchmove', function (e) { e.preventDefault(); move(e.changedTouches[0]); }, { passive: false });
-      cv.addEventListener('touchend', function (e) { e.preventDefault(); end(); }, { passive: false });
-      cv.addEventListener('mousedown', function (e) { start(e); });
-      window.addEventListener('mousemove', function (e) { move(e); });
-      window.addEventListener('mouseup', end);
-    }
-    // Cegah layar ikut bergulir/zoom saat menggores di iOS/Android
-    pad.addEventListener('touchmove', function (e) { e.preventDefault(); }, { passive: false });
-    pad.addEventListener('gesturestart', function (e) { e.preventDefault(); });
-
-    // Hasil dipotong rapat ke goresan, agar posisinya rapi di tengah blok tanda tangan dokumen
-    function exportPng() {
-      var minX = W, minY = H, maxX = 0, maxY = 0;
-      strokes.forEach(function (s) { s.forEach(function (p) { minX = Math.min(minX, p.x); minY = Math.min(minY, p.y); maxX = Math.max(maxX, p.x); maxY = Math.max(maxY, p.y); }); });
-      var m = 10; minX = Math.max(0, minX - m); minY = Math.max(0, minY - m); maxX = Math.min(W, maxX + m); maxY = Math.min(H, maxY + m);
-      var k = 1.25, c = document.createElement('canvas');
-      c.width = Math.ceil((maxX - minX) * k); c.height = Math.ceil((maxY - minY) * k);
-      var x = c.getContext('2d'); x.setTransform(k, 0, 0, k, -minX * k, -minY * k);
-      strokes.forEach(function (s) { drawStroke(x, s); });
-      return c.toDataURL('image/png');
-    }
-    function total() { return strokes.reduce(function (a, s) { return a + s.length; }, 0); }
-
-    $('#sigUndo').addEventListener('click', function () { strokes.pop(); redraw(); });
-    $('#sigClear').addEventListener('click', function () { strokes = []; redraw(); });
-    $('#sigCancel').addEventListener('click', close);
-    $('#sigSave').addEventListener('click', function () {
-      if (total() < 6) { toast('Tanda tangan terlalu singkat. Silakan tanda tangan di dalam kotak.', true); return; }
-      setTtd(exportPng()); saveDraft(); close(); toast('Tanda tangan tersimpan.');
-    });
-    window.addEventListener('resize', function () { if (pad.classList.contains('open')) requestAnimationFrame(layout); });
-    window.addEventListener('orientationchange', function () { setTimeout(function () { if (pad.classList.contains('open')) layout(); }, 250); });
-
-    function open() {
-      strokes = []; cur = null; activeId = null;
-      $('#sigName').textContent = $('#namaPengisi').value.trim();
-      pad.classList.add('open'); document.body.classList.add('lock');
-      requestAnimationFrame(function () { requestAnimationFrame(layout); });
-    }
-    function close() { pad.classList.remove('open'); document.body.classList.remove('lock'); end(); }
-    return { open: open };
-  })();
 
   // ---------- Helpers ----------
   function busy(on, msg) { $('#busy').classList.toggle('open', on); if (msg) $('#busyMsg').textContent = msg; }

@@ -4,8 +4,7 @@
  *   1. membuat PDF yang tata letaknya sama dengan form cetak,
  *   2. menyimpannya ke Google Drive akun pemasang (doranbhp@gmail.com) dalam folder rapi
  *      <Folder Induk>/<Kabupaten/Kota>/<Kec. ...>/<Desa/Kelurahan ...>/,
- *   3. menempatkan tanda tangan pengisi (digores dengan jari di HP) di blok tanda tangan PDF,
- *      dan menyimpan foto dokumentasi + gambar tanda tangan di subfolder "Dokumentasi",
+ *   3. menyimpan foto dokumentasi di subfolder "Dokumentasi" (tidak masuk ke PDF),
  *   4. mencatat satu baris ke spreadsheet rekap.
  * Cara pasang: lihat README.md di folder ini.
  */
@@ -22,8 +21,6 @@ var CONFIG = {
 
   INSTANSI: 'KEMENTERIAN HUKUM REPUBLIK INDONESIA',   // tampil di aplikasi
   DOC_KOP: false, // true = PDF diberi kop instansi di atas judul (template asli tanpa kop)
-  REQUIRE_TTD: true, // tanda tangan wajib sebelum kirim
-  TTD_LABEL: 'Pemeriksa Layanan', // tulisan di atas tanda tangan pada PDF (sesuai template)
   UNIT: 'KANTOR WILAYAH SUMATERA UTARA',
   ALAMAT: '', // baris alamat kop (opsional)
   PROVINSI: 'Sumatera Utara',
@@ -89,7 +86,7 @@ function clientConfig() {
   return {
     instansi: CONFIG.INSTANSI, unit: CONFIG.UNIT, alamat: CONFIG.ALAMAT, provinsi: CONFIG.PROVINSI,
     logo: CONFIG.LOGO_FILE_ID ? '' : CONFIG.LOGO_URL, maxPhotos: CONFIG.MAX_PHOTOS,
-    kop: CONFIG.DOC_KOP, requireTtd: CONFIG.REQUIRE_TTD, ttdLabel: CONFIG.TTD_LABEL
+    kop: CONFIG.DOC_KOP
   };
 }
 
@@ -118,7 +115,7 @@ function submitMonev(d) {
       ' - ' + d.identitas.tanggal;
     base = uniqueName_(folder, base, '.pdf', now);
 
-    // Foto dokumentasi & tanda tangan
+    // Foto dokumentasi
     var photoFiles = [];
     if (d.foto.length) {
       var docs = child_(folder, CONFIG.DOC_SUBFOLDER);
@@ -130,11 +127,6 @@ function submitMonev(d) {
           photoFiles.push(f);
         }
       });
-    }
-
-    if (d.ttd) {
-      var tb = dataUrlBlob_(d.ttd, base + ' - Tanda Tangan');
-      if (tb) child_(folder, CONFIG.DOC_SUBFOLDER).createFile(tb);
     }
 
     // PDF
@@ -230,7 +222,7 @@ function buildDocHtml_(d, o) {
 
   var info = [['Provinsi', o.provinsi], ['Kabupaten/Kota', id.kabupaten], ['Kecamatan', id.kecamatan],
     ['Desa/Kelurahan', (id.jenisWilayah ? id.jenisWilayah + ' ' : '') + (id.desa || '')],
-    ['Kepala Desa/Lurah', id.kepalaDesa]].map(function (r) {
+    ['Kepala Desa/Lurah', id.kepalaDesa], ['Tanggal Pengisian', fmtTanggal_(id.tanggal)]].map(function (r) {
     return '<tr><td style="padding:1px 0;width:34%;font-weight:bold;">' + r[0] + '</td><td style="padding:1px 0;width:2%;">:</td><td style="padding:1px 0;">' + esc_(r[1]) + '</td></tr>';
   }).join('');
 
@@ -245,22 +237,12 @@ function buildDocHtml_(d, o) {
       (o.logo ? '<td style="width:70px;"></td>' : '') + '</tr></table>';
   }
 
-  // Blok tanda tangan: rata kanan di bawah tabel, tidak terpotong halaman
-  var nama = id.namaPengisi ? esc_(id.namaPengisi) : '&nbsp;'.repeat(48);
-  var ttd = '<table style="width:100%;border-collapse:collapse;margin-top:16px;page-break-inside:avoid;"><tr>' +
-    '<td style="width:52%;"></td><td style="text-align:center;font-size:10.5pt;vertical-align:top;">' +
-    (id.tempatTtd ? esc_(id.tempatTtd) : '.................') + ', ' + (id.tanggal ? esc_(fmtTanggal_(id.tanggal)) : '.............................') +
-    '<br>' + esc_(o.ttdLabel || 'Pemeriksa Layanan') +
-    '<div style="height:72px;text-align:center;padding-top:4px;">' +
-    (d.ttd ? '<img src="' + d.ttd + '" style="height:66px;max-width:220px;">' : '') + '</div>' +
-    '(<b>' + nama + '</b>)' + (id.jabatanPengisi ? '<br>' + esc_(id.jabatanPengisi) : '') + '</td></tr></table>';
-
   return '<!doctype html><html><head><meta charset="utf-8"><title>Form Monev Posbankum</title>' +
     '<style>@page{size:A4;margin:15mm 13mm 10mm 19mm;}body{font-family:Arial,Helvetica,sans-serif;font-size:10.5pt;color:#000;margin:0;}' +
     'table{border-collapse:collapse;}</style></head><body>' + kop +
     '<div style="text-align:center;font-weight:bold;font-size:12pt;margin:0 0 12px;">FORM MONEV POS BANTUAN HUKUM DESA/KELURAHAN</div>' +
     '<table style="width:100%;margin-bottom:8px;font-size:10.5pt;">' + info + '</table>' +
-    '<table style="width:100%;font-size:10pt;">' + rows.join('') + '</table>' + ttd +
+    '<table style="width:100%;font-size:10pt;">' + rows.join('') + '</table>' +
     '</body></html>';
 }
 
@@ -277,7 +259,7 @@ function docOptions_() {
     }
   } catch (e) { logo = ''; }
   return { instansi: CONFIG.INSTANSI, unit: CONFIG.UNIT, alamat: CONFIG.ALAMAT, provinsi: CONFIG.PROVINSI, logo: logo,
-    kop: CONFIG.DOC_KOP, ttdLabel: CONFIG.TTD_LABEL };
+    kop: CONFIG.DOC_KOP };
 }
 
 function normalize_(d) {
@@ -288,10 +270,10 @@ function normalize_(d) {
     identitas: {
       kabupaten: s(id.kabupaten), kecamatan: s(id.kecamatan), desa: s(id.desa),
       jenisWilayah: id.jenisWilayah === 'Kelurahan' ? 'Kelurahan' : 'Desa',
-      kepalaDesa: s(id.kepalaDesa), tanggal: s(id.tanggal, 10), tempatTtd: s(id.tempatTtd),
+      kepalaDesa: s(id.kepalaDesa), tanggal: s(id.tanggal, 10),
       namaPengisi: s(id.namaPengisi), jabatanPengisi: s(id.jabatanPengisi), kontak: s(id.kontak, 40)
     },
-    sarana: {}, pelaporan: {}, kendala: [], permasalahan: [], foto: [], ttd: ''
+    sarana: {}, pelaporan: {}, kendala: [], permasalahan: [], foto: []
   };
   var mark = function (src, dst, ids) {
     ids.forEach(function (k) {
@@ -310,21 +292,19 @@ function normalize_(d) {
   out.foto = (d.foto || []).slice(0, CONFIG.MAX_PHOTOS).filter(function (p) {
     return p && /^data:image\/(jpeg|png);base64,/.test(String(p.dataUrl || ''));
   }).map(function (p) { return { dataUrl: String(p.dataUrl), caption: s(p.caption, 120) }; });
-  if (/^data:image\/png;base64,/.test(String(d.ttd || '')) && String(d.ttd).length < 2000000) out.ttd = String(d.ttd);
   return out;
 }
 
 function validate_(d) {
   var i = d.identitas;
   var need = [['kabupaten', 'Kabupaten/Kota'], ['kecamatan', 'Kecamatan'], ['desa', 'Nama Desa/Kelurahan'],
-    ['kepalaDesa', 'Kepala Desa/Lurah'], ['tanggal', 'Tanggal Monev'], ['namaPengisi', 'Nama pengisi form']];
+    ['kepalaDesa', 'Kepala Desa/Lurah'], ['tanggal', 'Tanggal Pengisian'], ['namaPengisi', 'Nama pengisi form']];
   for (var k = 0; k < need.length; k++) if (!i[need[k][0]]) return need[k][1] + ' wajib diisi.';
   if (FORM_SCHEMA.kabupatenKota.indexOf(i.kabupaten) === -1) return 'Kabupaten/Kota tidak dikenal.';
   if (!/^\d{4}-\d{2}-\d{2}$/.test(i.tanggal)) return 'Format tanggal tidak valid.';
   var empty = [];
   Object.keys(d.sarana).forEach(function (k) { if (!d.sarana[k].status) empty.push(k); });
   Object.keys(d.pelaporan).forEach(function (k) { if (!d.pelaporan[k].status) empty.push(k); });
-  if (CONFIG.REQUIRE_TTD && !d.ttd) return 'Tanda tangan belum dibubuhkan.';
   if (empty.length) return 'Masih ada ' + empty.length + ' isian Ada/Tidak Ada yang belum dipilih.';
   var bytes = d.foto.reduce(function (a, p) { return a + p.dataUrl.length; }, 0);
   if (bytes > 20 * 1024 * 1024) return 'Ukuran foto terlalu besar. Kurangi jumlah foto.';
@@ -388,7 +368,7 @@ function rekapSheet_(root) {
 }
 
 function rekapHeader_() {
-  var h = ['Waktu Kirim', 'ID', 'Kabupaten/Kota', 'Kecamatan', 'Desa/Kelurahan', 'Kepala Desa/Lurah', 'Tanggal Monev',
+  var h = ['Waktu Kirim', 'ID', 'Kabupaten/Kota', 'Kecamatan', 'Desa/Kelurahan', 'Kepala Desa/Lurah', 'Tanggal Pengisian',
     'Nama Pengisi', 'Jabatan Pengisi', 'No. HP Pengisi'];
   FORM_SCHEMA.sarana.forEach(function (g) {
     g.items.forEach(function (i) { h.push(i.label + ' (Ada/Tidak)', i.label + ' (Jumlah)'); });
