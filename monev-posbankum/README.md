@@ -4,12 +4,10 @@ Aplikasi web (Google Apps Script) untuk mengisi **Form Monev Pos Bantuan Hukum D
 Desa/kelurahan mengisi form dari HP atau komputer. Setiap form yang dikirim:
 
 1. menjadi **PDF** yang tata letaknya sama dengan template Word (A4, Arial, header biru),
-   dari identitas sampai *Permasalahan Yang Terjadi di Desa/Kelurahan*, lalu blok tanda tangan,
+   dari identitas (termasuk *Tanggal Pengisian*) sampai tabel *Permasalahan Yang Terjadi di Desa/Kelurahan*, tanpa tanda tangan,
 2. tersimpan otomatis di **Google Drive akun yang memasang aplikasi** (doranbhp@gmail.com),
-3. tanda tangan pengisi (digores dengan jari di HP) otomatis ditempatkan rapi di blok tanda tangan PDF:
-   "<tempat>, <tanggal> / Pemeriksa Layanan / tanda tangan / (nama) / jabatan",
-4. foto dokumentasi (opsional) dan gambar tanda tangan tersimpan di subfolder `Dokumentasi`,
-5. tercatat satu baris di spreadsheet rekap.
+3. foto dokumentasi (opsional) tersimpan di subfolder `Dokumentasi`,
+4. tercatat satu baris di spreadsheet rekap.
 
 Setelah mengirim, pengisi bisa langsung **Unduh PDF** atau **Cetak**.
 
@@ -24,8 +22,7 @@ Form (Web)/   ← folder induk (ROOT_FOLDER_ID), milik doranbhp@gmail.com
 │       └── Desa Bandar Klippa/
 │           ├── Form Monev Posbankum - Desa Bandar Klippa - Kec. Percut Sei Tuan - 2026-11-16.pdf
 │           └── Dokumentasi/
-│               ├── Form Monev Posbankum - ... - Foto 1.jpg
-│               └── Form Monev Posbankum - ... - Tanda Tangan.png
+│               └── Form Monev Posbankum - ... - Foto 1.jpg
 └── Kota Medan/ ...
 ```
 
@@ -45,7 +42,7 @@ Folder induk sudah diatur ke folder **Form (Web)** (`ROOT_FOLDER_ID`). Kosongkan
 6. Klik **Deploy**, lalu **New deployment**, ikon roda gigi, dan pilih **Web app**:
    - *Execute as*: **Me (doranbhp@gmail.com)**
    - *Who has access*: **Anyone**
-7. Klik **Deploy** dan salin **Web app URL** (berakhiran `/exec`). Link inilah yang dibagikan ke desa/kelurahan.
+7. Klik **Deploy** dan salin **Web app URL** (berakhiran `/exec`). Link inilah yang dibagikan ke desa/kelurahan (saat ini: https://bit.ly/monevposbankum).
    Bisa dipendekkan dengan bit.ly atau dibuat QR code.
 
 Pengisi **tidak perlu login Google**. Semua berkas tersimpan atas nama doranbhp@gmail.com.
@@ -63,10 +60,8 @@ URL tetap sama.
 | `ROOT_FOLDER_ID` | Pakai folder yang sudah ada (ID dari URL folder) |
 | `SPREADSHEET_NAME` | Nama spreadsheet rekap |
 | `INSTANSI`, `UNIT` | Teks instansi di tampilan aplikasi |
-| `REQUIRE_TTD` | `true` = tanda tangan wajib sebelum kirim |
-| `TTD_LABEL` | Tulisan di atas tanda tangan pada PDF (default `Pemeriksa Layanan`, sesuai template) |
 | `DOC_KOP` | `true` = PDF diberi kop instansi di atas judul (template asli tanpa kop) |
-| `LOGO_FILE_ID` / `LOGO_URL` | Logo di aplikasi & kop PDF (opsional) |
+| `LOGO_FILE_ID` / `LOGO_URL` | Logo kop PDF bila `DOC_KOP` aktif (logo Pengayoman di aplikasi sudah tertanam di `Index.html`) |
 | `MAX_PHOTOS` | Maksimal foto dokumentasi per pengisian |
 
 Daftar kabupaten/kota, sarana-prasarana, dan jenis pelaporan ada di `FORM_SCHEMA`.
@@ -75,11 +70,10 @@ Jika kolom rekap berubah, ganti nama atau hapus spreadsheet lama agar header bar
 
 ## Isi form
 
-- **Identitas**: Provinsi (Sumatera Utara), Kabupaten/Kota (33 pilihan), Kecamatan, Desa/Kelurahan, Kepala Desa/Lurah, tanggal monev.
-- **Pengisi form**: nama dan jabatan (tercetak di bawah tanda tangan), No. HP (hanya untuk rekap), tempat penandatanganan (otomatis terisi nama desa/kelurahan, bisa diubah).
+- **Identitas**: Provinsi (Sumatera Utara), Kabupaten/Kota (33 pilihan), Kecamatan, Desa/Kelurahan, Kepala Desa/Lurah, Tanggal Pengisian.
+- **Pengisi form**: nama, jabatan, No. HP. Hanya untuk rekap, tidak tercetak di PDF.
 - **Sarana dan Prasarana** (14 fasilitas) dan **Pelaporan Layanan** (4 layanan): pilih *Ada* atau *Tidak Ada*. Kolom *Jumlah* aktif bila *Ada*. Di PDF tercetak tanda √ di kolom yang dipilih.
 - **Kendala Posbankum** dan **Permasalahan di Desa/Kelurahan**: daftar poin, minimal 3 baris tercetak seperti template.
-- **Tanda tangan**: bantalan layar penuh untuk jari. Ada tombol urungkan/hapus, layar tidak ikut bergeser saat menggores, coretan tidak hilang saat HP diputar, dan hasilnya dipotong rapat ke goresan supaya posisinya rapi di dokumen.
 - **Foto dokumentasi** (opsional): disimpan di Drive, tidak masuk PDF.
 
 Isian tersimpan otomatis di perangkat pengisi, jadi tidak hilang kalau halaman tertutup sebelum dikirim.
